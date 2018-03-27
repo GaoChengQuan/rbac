@@ -66,4 +66,23 @@
       sn = #{sn,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <select id="pageList" parameterType="role" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from role
+    <where>
+    	<if test="name != null and name != '' ">
+    		and name like concat("%", #{name}, "%")
+    	</if>
+    </where>
+  </select>
+  
+  <delete id="deleteAll">
+  	delete from role
+  	where id in
+  	<foreach collection="array" item="id" open="(" close=")" separator=",">
+  		#{id}
+  	</foreach>
+  </delete>
 </mapper>

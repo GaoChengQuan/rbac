@@ -1,5 +1,8 @@
 package com.situ.rbac.mapper;
 
+import java.util.List;
+
+import com.situ.rbac.entity.Role;
 import com.situ.rbac.entity.Role;
 
 public interface RoleMapper {
@@ -14,4 +17,8 @@ public interface RoleMapper {
     int updateByPrimaryKeySelective(Role record);
 
     int updateByPrimaryKey(Role record);
+    
+    List<Role> pageList(Role role);
+
+	int deleteAll(String[] idsArray);
 }
