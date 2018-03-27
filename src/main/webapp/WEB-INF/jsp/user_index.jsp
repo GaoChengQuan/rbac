@@ -143,14 +143,6 @@
 		<div>
 			用户名：<input type="text" id="s_name"/>
 			邮箱：<input type="text" id="s_email"/>
-			角色：<select id="s_roleName" class="easyui-combobox" 
-					editable="false" panelHeight="auto">
-					<option value="">请选择...</option>
-					<option value="系统管理员">系统管理员</option>
-					<option value="销售主管">销售主管</option>
-					<option value="客户经理">客户经理</option>
-					<option value="高管">高管</option>
-				</select>
 			<a href="javascript:doSearch()" class="easyui-linkbutton" data-options="iconCls:'icon-search'">搜索</a>
 		</div>
 	</div>

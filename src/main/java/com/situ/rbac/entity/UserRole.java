@@ -1,16 +1,16 @@
 package com.situ.rbac.entity;
 
-public class EmployeeRole {
-    private Long employeeId;
+public class UserRole {
+    private Long userId;
 
     private Long roleId;
 
-    public Long getEmployeeId() {
-        return employeeId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getRoleId() {
@@ -27,7 +27,7 @@ public class EmployeeRole {
         sb.append(getClass().getSimpleName());
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
-        sb.append(", employeeId=").append(employeeId);
+        sb.append(", userId=").append(userId);
         sb.append(", roleId=").append(roleId);
         sb.append("]");
         return sb.toString();

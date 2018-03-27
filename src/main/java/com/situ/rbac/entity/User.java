@@ -1,6 +1,6 @@
 package com.situ.rbac.entity;
 
-public class Employee {
+public class User {
     private Long id;
 
     private String name;

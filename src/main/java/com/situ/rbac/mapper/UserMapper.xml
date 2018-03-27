@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.situ.rbac.mapper.EmployeeMapper" >
-  <resultMap id="BaseResultMap" type="com.situ.rbac.entity.Employee" >
+<mapper namespace="com.situ.rbac.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.situ.rbac.entity.User" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="real_name" property="realName" jdbcType="VARCHAR" />
@@ -17,23 +17,23 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from employee
+    from user
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from employee
+    delete from user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.situ.rbac.entity.Employee" >
-    insert into employee (id, name, real_name, 
+  <insert id="insert" parameterType="com.situ.rbac.entity.User" >
+    insert into user (id, name, real_name, 
       password, tel, email, 
       state, admin)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
       #{state,jdbcType=BIT}, #{admin,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="com.situ.rbac.entity.Employee" >
-    insert into employee
+  <insert id="insertSelective" parameterType="com.situ.rbac.entity.User" >
+    insert into user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -87,8 +87,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.situ.rbac.entity.Employee" >
-    update employee
+  <update id="updateByPrimaryKeySelective" parameterType="com.situ.rbac.entity.User" >
+    update user
     <set >
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
@@ -114,8 +114,8 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.situ.rbac.entity.Employee" >
-    update employee
+  <update id="updateByPrimaryKey" parameterType="com.situ.rbac.entity.User" >
+    update user
     set name = #{name,jdbcType=VARCHAR},
       real_name = #{realName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
@@ -125,4 +125,26 @@
       admin = #{admin,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+   <select id="pageList" parameterType="user" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from user
+    <where>
+    	<if test="name != null and name != '' ">
+    		and name like concat("%", #{name}, "%")
+    	</if>
+    	<if test="email != null and email != '' ">
+    		and email like concat("%", #{email}, "%")
+    	</if>
+    </where>
+  </select>
+  
+  <delete id="deleteAll">
+  	delete from user
+  	where id in
+  	<foreach collection="array" item="id" open="(" close=")" separator=",">
+  		#{id}
+  	</foreach>
+  </delete>
 </mapper>
