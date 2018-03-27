@@ -85,4 +85,9 @@ public class RoleServiceImpl implements IRoleService{
 		}
 		return ServerResponse.createERROR("更新失败");
 	}
+
+	@Override
+	public List<Role> selectAll() {
+		return roleMapper.pageList(new Role());
+	}
 }

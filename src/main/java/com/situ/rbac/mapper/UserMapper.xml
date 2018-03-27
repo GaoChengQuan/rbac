@@ -24,7 +24,7 @@
     delete from user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.situ.rbac.entity.User" >
+  <insert id="insert" parameterType="com.situ.rbac.entity.User"  useGeneratedKeys="true" keyProperty="id">
     insert into user (id, name, real_name, 
       password, tel, email, 
       state, admin)
@@ -147,4 +147,10 @@
   		#{id}
   	</foreach>
   </delete>
+  
+  <select id="selectRoleIdByUserId" resultType="long" parameterType="long">
+  	select role_id
+  	from user_role
+  	where user_id=#{userId}
+  </select>
 </mapper>

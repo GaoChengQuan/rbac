@@ -22,4 +22,6 @@ public interface IUserService {
 	ServerResponse add(User user);
 
 	ServerResponse update(User user);
+
+	List<Long> selectRoleIdByUserId(Long userId);
 }

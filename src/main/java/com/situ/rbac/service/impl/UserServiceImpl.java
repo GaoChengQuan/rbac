@@ -9,13 +9,19 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.situ.rbac.common.DataGrideResult;
 import com.situ.rbac.common.ServerResponse;
+import com.situ.rbac.entity.Role;
 import com.situ.rbac.entity.User;
+import com.situ.rbac.entity.UserRole;
 import com.situ.rbac.mapper.UserMapper;
+import com.situ.rbac.mapper.UserRoleMapper;
 import com.situ.rbac.service.IUserService;
 @Service
 public class UserServiceImpl implements IUserService{
 	@Autowired
 	private UserMapper userMapper;
+	
+	@Autowired
+	private UserRoleMapper userRoleMapper;
 	
 	@Override
 	public DataGrideResult<User> pageList(Integer page, Integer rows, User user) {
@@ -48,6 +54,16 @@ public class UserServiceImpl implements IUserService{
 	@Override
 	public ServerResponse add(User user) {
 		int count = userMapper.insert(user);
+		List<Role> roles = user.getRoles();
+		//员工有角色时候，保存user_role关系到表中
+		if (roles != null && roles.size() > 0) {
+			for (Role role : roles) {
+				UserRole userRole = new UserRole();
+				userRole.setRoleId(role.getId());
+				userRole.setUserId(user.getId());
+				userRoleMapper.insert(userRole);
+			}
+		}
 		if (count > 0) {
 			return ServerResponse.createSUCCESS("添加成功");
 		}
@@ -56,10 +72,30 @@ public class UserServiceImpl implements IUserService{
 	
 	@Override
 	public ServerResponse update(User user) {
+		// 删除原来的角色
+		userRoleMapper.deleteByUserId(user.getId());
+		
+		List<Role> roles = user.getRoles();
+		//员工有角色时候，保存user_role关系到表中
+		if (roles != null && roles.size() > 0) {
+			for (Role role : roles) {
+				UserRole userRole = new UserRole();
+				userRole.setRoleId(role.getId());
+				userRole.setUserId(user.getId());
+				userRoleMapper.insert(userRole);
+			}
+		}
+		
 		int count = userMapper.updateByPrimaryKey(user);
 		if (count > 0) {
 			return ServerResponse.createSUCCESS("更新成功");
 		}
 		return ServerResponse.createERROR("更新失败");
+	}
+
+	@Override
+	public List<Long> selectRoleIdByUserId(Long userId) {
+		List<Long> list = userMapper.selectRoleIdByUserId(userId);
+		return list;
 	}
 }

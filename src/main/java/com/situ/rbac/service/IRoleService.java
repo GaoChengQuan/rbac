@@ -22,4 +22,6 @@ public interface IRoleService {
 	ServerResponse add(Role role);
 
 	ServerResponse update(Role role);
+
+	List<Role> selectAll();
 }

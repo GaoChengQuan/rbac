@@ -28,4 +28,9 @@
       </if>
     </trim>
   </insert>
+  
+  <delete id="deleteByUserId" parameterType="long">
+  	delete from user_role
+  	where user_id=#{userId}
+  </delete>
 </mapper>

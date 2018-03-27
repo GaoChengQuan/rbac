@@ -46,4 +46,10 @@ public class RoleController {
 	public ServerResponse update(Role role) {
 		return roleService.update(role);
 	}
+	
+	@RequestMapping("/selectAll")
+	@ResponseBody
+	public List<Role> selectAll() {
+		return roleService.selectAll();
+	}
 }

@@ -20,10 +20,10 @@
 					{field:"cb",checkbox:true,align:"center"},
 					{field:"id",title:"编号",width:80,align:"center"},
 					{field:"name",title:"用户名",width:80,align:"center"},
-					{field:"trueName",title:"真实姓名",width:80,align:"center"},
+					{field:"real_name",title:"真实姓名",width:80,align:"center"},
+					{field:"password",title:"密码",width:80,align:"center"},
+					{field:"tel",title:"联系电话",width:80,align:"center"},
 					{field:"email",title:"邮箱",width:80,align:"center"},
-					{field:"phone",title:"联系电话",width:80,align:"center"},
-					{field:"roleName",title:"角色",width:80,align:"center"},
 				]],
 			});
 			
@@ -53,8 +53,7 @@
 		function doSearch(){
 			$('#datagrid').datagrid('load', {    
 			    name : $("#s_name").val(),    
-			    email : $("#s_email").val(),   
-			    roleName : $("#s_roleName").val() 
+			    email : $("#s_email").val() 
 			});  
 		}
 		
@@ -104,6 +103,23 @@
 			}
 			var row = selections[0];
 			$("#dialog").dialog("open").dialog("setTitle", "修改信息");
+			
+			/*
+			 * 回显角色列表数据
+			 * 根据员工的Id,发送ajax的请求去后台查询该Id的员工对应的权限,这里要求必须是同步的,不然取到数据为null
+			 * async:false:关闭异步($.get()和$.post()方式都为异步方式) 同步和异步的区别:
+			 * 同步:只有发送请求并响应完毕后,才会执行下面的代码,
+			 * 异步:发送请求后不必等响应就继续执行后面的代码,所以后面取到的响应数据为null
+			 */
+			var html = $.ajax({
+				url : "${ctx}/user/selectRoleIdByUserId.action",
+				data : "userId=" + row.id,
+				async : false
+			}).responseText;
+			// html为字符串数组,这里要求要用数组对象,所以要用转换为json对象
+			html = $.parseJSON(html);
+			$("#employee_role_combobox").combobox("setValues", html);
+			
 			//load读取记录填充到表单中。数据参数可以是一个字符串或一个对象类型，如果是字符串则作为远程URL，否则作为本地记录
 			$("form").form("load", row);
 		}
@@ -112,11 +128,14 @@
 		function doAddOrUpdate() {
 			$("#form").form("submit", {
 				url : url,
-				onSubmit : function() {// do some check
-					if($("#roleName").combobox("getValue") == "") {
-						$.messager.alert("系统提示", "请选择用户角色");
-						return false;
+				onSubmit : function(param) {// do some check
+					// 获取选中的角色Id数组
+					var values = $("#employee_role_combobox").combobox(
+							"getValues");
+					for (var i = 0; i < values.length; i++) {
+						param["roles[" + i + "].id"] = values[i];
 					}
+					
 					return $(this).form('validate');//返回false终止表单提交
 				},
 				success : function(data) {
@@ -149,39 +168,32 @@
 	<!-- toolbar 结束 -->
 	
 	<!-- 添加和修改的dialog 开始 -->
-    <div id="dialog" style="width:650;height:280,padding: 10px 20px">
+    <div id="dialog" style="width:400;height:600,padding: 10px 20px">
        <form action="" id="form" method="post">
            <input type="hidden" id="id" name="id"/>
-           <table cellspacing="8px">
+           <table align="center">
                <tr>
-                  <td>用户名：</td>
-                  <td><input type="text" id="name" name="name" class="easyui-validatebox" required="true"/><font color="red">*</font></td>
-                   <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                  <td>密码：</td>
-                  <td><input type="text" id="password" name="password" class="easyui-validatebox" required="true"/><font color="red">*</font></td>
-               </tr>
-               <tr>
-                  <td>真实姓名：</td>
-                  <td><input type="text" id="trueName" name="trueName" class="easyui-validatebox" required="true"/><font color="red">*</font></td>
-                   <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                  <td>邮箱：</td>
-                  <td><input type="text" id="email" name="email" class="easyui-validatebox" required="true" validType="email"/><font color="red">*</font></td>
-               </tr>
-               <tr>
-                  <td>联系电话：</td>
-                  <td><input type="text" id="phone" name="phone" class="easyui-validatebox" required="true"/><font color="red">*</font></td>
-                   <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                  <td>用户角色：</td>
-                  <td>
-                      <select class="easyui-combobox" id="roleName" panelHeight="auto" editable="false" name="roleName" style="width:160">
-                          <option value="">请选择...</option>
-                          <option value="系统管理员">系统管理员</option>
-                          <option value="销售主管">销售主管</option>
-                          <option value="客户经理">客户经理</option>
-                          <option value="高管">高管</option>
-                      </select>
-                      <font color="red">*</font></td>
-               </tr>
+                	<td>用户名</td>
+                	<td><input class="easyui-validatebox" id="name" name="name" data-options="required:true"/></td>
+	            </tr>
+	            <tr>
+	                <td>真实姓名</td>
+	                <td><input class="easyui-validatebox" id="real_name" name="real_name" data-options="required:true"/></td>
+	            </tr>
+	            <tr>
+	                <td>邮箱</td>
+	                <td><input  class="easyui-validatebox" data-options="required:true" id="email" name="email"/></td>
+	            </tr>
+	            <tr>
+	                <td>联系电话</td>
+	                <td><input id="tel" name="tel"/></td>
+	            </tr>
+	            <tr>
+	                <td>角色</td>
+	                <td><input class="easyui-combobox" id="employee_role_combobox"
+	                           data-options=" url:'${ctx}/role/selectAll.action', multiple:true, valueField:'id',textField:'name'">
+	                </td>
+	            </tr>
            </table>
        </form>
     </div>

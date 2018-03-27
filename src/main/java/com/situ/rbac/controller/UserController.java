@@ -46,4 +46,10 @@ public class UserController {
 	public ServerResponse update(User user) {
 		return userService.update(user);
 	}
+	
+	@RequestMapping("/selectRoleIdByUserId")
+	@ResponseBody
+	public List<Long> selectRoleIdByUserId(Long userId) {
+		return userService.selectRoleIdByUserId(userId);
+	}
 }
