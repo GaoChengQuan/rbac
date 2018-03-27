@@ -4,8 +4,8 @@
 <configuration>
     <!-- 别名 -->
     <typeAliases>
-       <package name="com.situ.crm.entity"/>
-       <package name="com.situ.crm.vo"/>
+       <package name="com.situ.rbac.entity"/>
+       <package name="com.situ.rbac.vo"/>
     </typeAliases>
     
     <plugins>
