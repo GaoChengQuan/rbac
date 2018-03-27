@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 	<script type="text/javascript">
+		var selfPermissionDatagrid;
 		$(function() {
 			/* 渲染table */
 			$("#datagrid").datagrid({
@@ -26,6 +27,8 @@
 			
 			/* 初始化添加、修改的dialog */
 			$("#dialog").dialog({
+				width: 600,
+			    height: 450,
 				closed : true,
 			    buttons : [
 			        {
@@ -43,7 +46,68 @@
 			        	}
 			        }
 			    ]
-			}); 
+			});
+			
+			/* 所有权限表格 */
+			var allPermissionDatagrid = $("#all_permission_datagrid").datagrid({
+		        title: "所有权限",
+		        width: 250,
+		        height: 300,
+		        pagination: true,
+		        url: "${ctx}/permission/pageList.action",
+		        rownumbers: true,
+		        singleSelect: true,
+		        fitColumns : true,
+		        //数据表头信息
+		        columns: [[
+		            {field: "name", title: "名称", width: 1, align: "center"}
+		        ]],
+		        onDblClickRow: function (rowIndex, rowData) {
+		            // 获取自身权限的所有对象
+		            var selfRows = selfPermissionDatagrid.datagrid("getRows");
+
+		            //查询要添加的权限是否在自身对象存在,如果存在,则选中要权限,没有的话,则追加权限
+		            var flag = false;
+		            var index = 0;
+		            for (var i = 0; i < selfRows.length; i++) {
+		                if (selfRows[i].id == rowData.id) {
+		                    flag = true;
+		                    index = i;
+		                    break;
+		                }
+		            }
+		            if (flag) {//已经存在权限
+		                selfPermissionDatagrid.datagrid("selectRow", index);
+		            } else {//不存在权限，追加
+		                selfPermissionDatagrid.datagrid("appendRow", rowData);
+		            }
+		        }
+		    });
+		    //设置所有权限的分页为简洁效果
+		    var pager = allPermissionDatagrid.datagrid("getPager");
+		    pager.pagination({
+		        showPageList: false,
+		        showRefresh: false,
+		        displayMsg: "",
+
+		    });
+
+		    /* 自身权限表格 */
+		    selfPermissionDatagrid = $("#self_permission_datagrid").datagrid({
+		        title: "自身权限",
+		        width: 250,
+		        height: 300,
+		        rownumbers: true,
+		        singleSelect: true,
+		        fitColumns: true,
+		        columns: [[
+		            {field: "name", title: "名称", width: 1, align: "center"}
+		        ]],
+		        onDblClickRow: function (rowIndex, rowData) {
+		            selfPermissionDatagrid.datagrid("deleteRow", rowIndex);
+		        }
+
+		    });
 		});
 		
 		/* 搜索 */
@@ -107,8 +171,13 @@
 		function doAddOrUpdate() {
 			$("#form").form("submit", {
 				url : url,
-				onSubmit : function() {// do some check
-					return $(this).form('validate');//返回false终止表单提交
+				//提交之前的回调函数
+				onSubmit : function(param) {// do some check
+					var selfRows = selfPermissionDatagrid.datagrid("getRows");
+                    for (var i = 0; i < selfRows.length; i++) {
+                        param["permissions[" + i + "].id"] = selfRows[i].id;
+                    }
+					//return $(this).form('validate');//返回false终止表单提交
 				},
 				success : function(data) {
 					// change the JSON string to javascript object
@@ -139,42 +208,22 @@
 	<!-- toolbar 结束 -->
 	
 	<!-- 添加和修改的dialog 开始 -->
-    <div id="dialog" style="width:650;height:280,padding: 10px 20px">
-       <form action="" id="form" method="post">
-           <input type="hidden" id="id" name="id"/>
-           <table cellspacing="8px">
-               <tr>
-                  <td>用户名：</td>
-                  <td><input type="text" id="name" name="name" class="easyui-validatebox" required="true"/><font color="red">*</font></td>
-                   <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                  <td>密码：</td>
-                  <td><input type="text" id="password" name="password" class="easyui-validatebox" required="true"/><font color="red">*</font></td>
-               </tr>
-               <tr>
-                  <td>真实姓名：</td>
-                  <td><input type="text" id="trueName" name="trueName" class="easyui-validatebox" required="true"/><font color="red">*</font></td>
-                   <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                  <td>邮箱：</td>
-                  <td><input type="text" id="email" name="email" class="easyui-validatebox" required="true" validType="email"/><font color="red">*</font></td>
-               </tr>
-               <tr>
-                  <td>联系电话：</td>
-                  <td><input type="text" id="phone" name="phone" class="easyui-validatebox" required="true"/><font color="red">*</font></td>
-                   <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                  <td>用户角色：</td>
-                  <td>
-                      <select class="easyui-combobox" id="roleName" panelHeight="auto" editable="false" name="roleName" style="width:160">
-                          <option value="">请选择...</option>
-                          <option value="系统管理员">系统管理员</option>
-                          <option value="销售主管">销售主管</option>
-                          <option value="客户经理">客户经理</option>
-                          <option value="高管">高管</option>
-                      </select>
-                      <font color="red">*</font></td>
-               </tr>
-           </table>
-       </form>
-    </div>
+	
+	<div id="dialog">
+	    <form id="form" method="post">
+	        <input type="hidden" name="id" />
+	        <table align="center">
+	            <tr>
+	                <td>角色名称:<input name="name"/></td>
+	                <td>角色编号:<input name="sn"/></td>
+	            </tr>
+	        <tr>
+	            <td><table id="self_permission_datagrid" ></table></td>
+	            <td><table id="all_permission_datagrid" ></table></td>
+	        </tr>
+	        </table>
+	    </form>
+	</div>
     <!-- 添加和修改的dialog 结束 -->
 </body>
 </html>

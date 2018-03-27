@@ -19,7 +19,7 @@
     delete from role
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.situ.rbac.entity.Role" >
+  <insert id="insert" parameterType="com.situ.rbac.entity.Role" useGeneratedKeys="true" keyProperty="id">
     insert into role (id, name, sn)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{sn,jdbcType=VARCHAR})
   </insert>

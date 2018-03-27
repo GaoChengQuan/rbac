@@ -9,13 +9,19 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.situ.rbac.common.DataGrideResult;
 import com.situ.rbac.common.ServerResponse;
+import com.situ.rbac.entity.Permission;
 import com.situ.rbac.entity.Role;
+import com.situ.rbac.entity.RolePermission;
 import com.situ.rbac.mapper.RoleMapper;
+import com.situ.rbac.mapper.RolePermissionMapper;
 import com.situ.rbac.service.IRoleService;
 @Service
 public class RoleServiceImpl implements IRoleService{
 	@Autowired
 	private RoleMapper roleMapper;
+	
+	@Autowired
+	private RolePermissionMapper rolePermissionMapper;
 	
 	@Override
 	public DataGrideResult<Role> pageList(Integer page, Integer rows, Role role) {
@@ -48,6 +54,13 @@ public class RoleServiceImpl implements IRoleService{
 	@Override
 	public ServerResponse add(Role role) {
 		int count = roleMapper.insert(role);
+		// 保存role和permission的Id到role_permission中间表,建立role和permission之间的关系
+        for (Permission p : role.getPermissions()) {
+        	RolePermission rolePermission = new RolePermission();
+        	rolePermission.setRoleId(role.getId());
+        	rolePermission.setPermissionId(p.getId());
+        	rolePermissionMapper.insert(rolePermission);
+        }
 		if (count > 0) {
 			return ServerResponse.createSUCCESS("添加成功");
 		}

@@ -2,6 +2,8 @@ package com.situ.rbac.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.situ.rbac.entity.Role;
 import com.situ.rbac.entity.Role;
 
