@@ -165,6 +165,11 @@
 			$("#dialog").dialog("open").dialog("setTitle", "修改信息");
 			//load读取记录填充到表单中。数据参数可以是一个字符串或一个对象类型，如果是字符串则作为远程URL，否则作为本地记录
 			$("form").form("load", row);
+			// 回显自身权限的数据
+            selfPermissionDatagrid.datagrid("options").url = "${ctx}/permission/selectByRoleId.action";
+            selfPermissionDatagrid.datagrid("load", {
+                roleId: row.id
+            })
 		}
 		
 		/* 真正的去添加或者更新用户 */

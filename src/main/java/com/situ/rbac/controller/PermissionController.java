@@ -44,4 +44,10 @@ public class PermissionController {
 	public ServerResponse update(Permission permission) {
 		return permissionService.update(permission);
 	}
+	
+	@RequestMapping("/selectByRoleId")
+	@ResponseBody
+	public DataGrideResult selectByRoleId(Integer roleId) {
+		return permissionService.selectByRoleId(roleId);
+	}
 }

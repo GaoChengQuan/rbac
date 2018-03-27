@@ -21,4 +21,6 @@ public interface PermissionMapper {
     List<Permission> pageList(Permission Permission);
 
 	int deleteAll(String[] idsArray);
+
+	List<Permission> selectByRoleId(Integer roleId);
 }

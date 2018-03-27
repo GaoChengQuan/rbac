@@ -28,4 +28,10 @@
       </if>
     </trim>
   </insert>
+  
+  <delete id="deleteByRoleId" parameterType="long">
+  	delete from role_permission
+  	where role_id=#{roleId}
+  </delete>
+  
 </mapper>

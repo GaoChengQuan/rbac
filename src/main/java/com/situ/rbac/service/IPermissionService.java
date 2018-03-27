@@ -20,4 +20,6 @@ public interface IPermissionService {
 	ServerResponse add(Permission permission);
 
 	ServerResponse update(Permission permission);
+
+	DataGrideResult selectByRoleId(Integer roleId);
 }

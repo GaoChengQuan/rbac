@@ -87,4 +87,12 @@
   		#{id}
   	</foreach>
   </delete>
+  
+  <select id="selectByRoleId" parameterType="int" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from permission
+    where id in
+    (select permission_id from role_permission where role_id = #{roleId})
+  </select>
 </mapper>

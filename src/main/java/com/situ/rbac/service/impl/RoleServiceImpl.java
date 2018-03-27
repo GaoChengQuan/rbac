@@ -69,6 +69,16 @@ public class RoleServiceImpl implements IRoleService{
 	
 	@Override
 	public ServerResponse update(Role role) {
+		// 删除原来的权限
+		rolePermissionMapper.deleteByRoleId(role.getId());
+        // 重新新增权限
+        for (Permission p : role.getPermissions()) {
+        	RolePermission rolePermission = new RolePermission();
+        	rolePermission.setRoleId(role.getId());
+        	rolePermission.setPermissionId(p.getId());
+        	rolePermissionMapper.insert(rolePermission);
+        }
+		
 		int count = roleMapper.updateByPrimaryKey(role);
 		if (count > 0) {
 			return ServerResponse.createSUCCESS("更新成功");
