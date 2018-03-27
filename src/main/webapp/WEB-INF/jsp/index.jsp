@@ -38,7 +38,7 @@
            <div id="aa" class="easyui-accordion" data-optiopns="border:false,fit:true" >  
            		<div title="管理"  data-options="iconCls:'icon-khgl'" style="padding:10px;">
                   <a href="javascript:openTab('员工管理','${ctx}/user/index.action','icon-khxxgl')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-yxjhgl'" style="width: 150px;">员工管理</a>
-                  <a href="javascript:openTab('客户开发计划','${ctx}/saleChance/cusDevPlan.action','icon-khlsgl')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-khkfjh'" style="width: 150px;">客户开发计划</a>
+                  <a href="javascript:openTab('权限管理','${ctx}/permission/index.action','icon-khlsgl')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-khkfjh'" style="width: 150px;">权限管理</a>
                </div>
               <%-- <div title="营销管理"  data-options="iconCls:'icon-khgl'" style="padding:10px;">
                   <a href="javascript:openTab('营销机会管理','${ctx}/saleChance/index.action','icon-khxxgl')" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-yxjhgl'" style="width: 150px;">营销机会管理</a>
