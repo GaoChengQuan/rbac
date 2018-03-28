@@ -153,4 +153,11 @@
   	from user_role
   	where user_id=#{userId}
   </select>
+  
+   <select id="login" resultMap="BaseResultMap"  >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where name=#{name} and password=#{password}
+  </select>
 </mapper>

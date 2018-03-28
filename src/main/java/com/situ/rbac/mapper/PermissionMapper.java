@@ -23,4 +23,8 @@ public interface PermissionMapper {
 	int deleteAll(String[] idsArray);
 
 	List<Permission> selectByRoleId(Integer roleId);
+
+	List<Permission> selectByUserId(Long userId);
+
+	Permission selectByResource(String resource);
 }

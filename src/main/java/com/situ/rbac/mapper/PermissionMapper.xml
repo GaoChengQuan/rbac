@@ -95,4 +95,24 @@
     where id in
     (select permission_id from role_permission where role_id = #{roleId})
   </select>
+  
+  <select id="selectByUserId" parameterType="long" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from permission
+    where id in
+	  (select permission_id from role_permission
+	  where role_id in(
+	  select role_id from user_role
+	  where user_id = #{userId}
+    ))
+  </select>
+  
+  <select id="selectByResource" parameterType="string" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from permission
+    where resource=#{resource}
+  </select>
+  
 </mapper>

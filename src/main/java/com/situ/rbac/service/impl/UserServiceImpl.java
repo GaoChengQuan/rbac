@@ -2,6 +2,8 @@ package com.situ.rbac.service.impl;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,12 +11,15 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.situ.rbac.common.DataGrideResult;
 import com.situ.rbac.common.ServerResponse;
+import com.situ.rbac.entity.Permission;
 import com.situ.rbac.entity.Role;
 import com.situ.rbac.entity.User;
 import com.situ.rbac.entity.UserRole;
+import com.situ.rbac.mapper.PermissionMapper;
 import com.situ.rbac.mapper.UserMapper;
 import com.situ.rbac.mapper.UserRoleMapper;
 import com.situ.rbac.service.IUserService;
+import com.situ.rbac.util.UserContext;
 @Service
 public class UserServiceImpl implements IUserService{
 	@Autowired
@@ -22,6 +27,9 @@ public class UserServiceImpl implements IUserService{
 	
 	@Autowired
 	private UserRoleMapper userRoleMapper;
+	
+	@Autowired
+	private PermissionMapper permissionMapper;
 	
 	@Override
 	public DataGrideResult<User> pageList(Integer page, Integer rows, User user) {
@@ -97,5 +105,22 @@ public class UserServiceImpl implements IUserService{
 	public List<Long> selectRoleIdByUserId(Long userId) {
 		List<Long> list = userMapper.selectRoleIdByUserId(userId);
 		return list;
+	}
+
+	@Override
+	public ServerResponse login(String name, String password, HttpServletRequest request) {
+		// 设置请求到当前的线程中
+        //UserContext.setLocalThread(request);
+		UserContext.session = request.getSession();
+		User user = userMapper.login(name, password);
+		if (user != null) {
+			// 把当前用户放到session中
+            request.getSession().setAttribute(UserContext.USER_IN_SESSION, user);
+            // 查询该用户拥有的权限,并放到session中
+            List<Permission> permissions = permissionMapper.selectByUserId(user.getId());
+            request.getSession().setAttribute(UserContext.PERMISSION_IN_SESSION, permissions);
+            return ServerResponse.createSUCCESS("登录成功");
+		}
+		return ServerResponse.createERROR("登录失败");
 	}
 }

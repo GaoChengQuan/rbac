@@ -2,11 +2,14 @@ package com.situ.rbac.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mysql.fabric.Server;
 import com.situ.rbac.common.DataGrideResult;
 import com.situ.rbac.common.ServerResponse;
 import com.situ.rbac.entity.User;
@@ -51,5 +54,16 @@ public class UserController {
 	@ResponseBody
 	public List<Long> selectRoleIdByUserId(Long userId) {
 		return userService.selectRoleIdByUserId(userId);
+	}
+	
+	@RequestMapping("/login")
+	@ResponseBody
+	public ServerResponse login(String name, String password, HttpServletRequest request) {
+		return userService.login(name, password, request);
+	}
+	
+	@RequestMapping("/getLoginPage")
+	public String getLoginPage() {
+		return "login";
 	}
 }

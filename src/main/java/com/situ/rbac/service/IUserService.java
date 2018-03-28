@@ -2,6 +2,8 @@ package com.situ.rbac.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.situ.rbac.common.DataGrideResult;
 import com.situ.rbac.common.ServerResponse;
 import com.situ.rbac.entity.User;
@@ -24,4 +26,6 @@ public interface IUserService {
 	ServerResponse update(User user);
 
 	List<Long> selectRoleIdByUserId(Long userId);
+
+	ServerResponse login(String name, String password, HttpServletRequest request);
 }

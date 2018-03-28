@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+
+	<description>权限控制判断</description>
+	<display-name>权限判断</display-name>
+	<tlib-version>1.0</tlib-version>
+	<short-name>myFn</short-name>
+	<uri>http://situ.com/rbac</uri>
+
+	<function>
+		<description>
+            权限控制判断
+        </description>
+		<name>checkPermission</name>
+		<function-class>com.situ.rbac.util.PermissionUtils</function-class>
+		<function-signature>boolean checkPermission(java.lang.String)</function-signature>
+		<example>
+            &lt;myFn:if test="${fn:checkPermission(function)}">
+        </example>
+	</function>
+</taglib>
