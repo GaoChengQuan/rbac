@@ -54,7 +54,8 @@ public class RoleServiceImpl implements IRoleService{
 	@Override
 	public ServerResponse add(Role role) {
 		int count = roleMapper.insert(role);
-		// 保存role和permission的Id到role_permission中间表,建立role和permission之间的关系
+		// 保存role和permission的Id到role_permission中间表,
+		//建立role和permission之间的关系
         for (Permission p : role.getPermissions()) {
         	RolePermission rolePermission = new RolePermission();
         	rolePermission.setRoleId(role.getId());

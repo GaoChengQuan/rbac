@@ -67,16 +67,16 @@
 		            var selfRows = selfPermissionDatagrid.datagrid("getRows");
 
 		            //查询要添加的权限是否在自身对象存在,如果存在,则选中要权限,没有的话,则追加权限
-		            var flag = false;
+		            var isExist = false;
 		            var index = 0;
 		            for (var i = 0; i < selfRows.length; i++) {
 		                if (selfRows[i].id == rowData.id) {
-		                    flag = true;
+		                	isExist = true;
 		                    index = i;
 		                    break;
 		                }
 		            }
-		            if (flag) {//已经存在权限
+		            if (isExist) {//已经存在权限
 		                selfPermissionDatagrid.datagrid("selectRow", index);
 		            } else {//不存在权限，追加
 		                selfPermissionDatagrid.datagrid("appendRow", rowData);

@@ -20,7 +20,7 @@
 					{field:"cb",checkbox:true,align:"center"},
 					{field:"id",title:"编号",width:80,align:"center"},
 					{field:"name",title:"用户名",width:80,align:"center"},
-					{field:"real_name",title:"真实姓名",width:80,align:"center"},
+					{field:"realName",title:"真实姓名",width:80,align:"center"},
 					{field:"password",title:"密码",width:80,align:"center"},
 					{field:"tel",title:"联系电话",width:80,align:"center"},
 					{field:"email",title:"邮箱",width:80,align:"center"},
@@ -178,7 +178,7 @@
 	            </tr>
 	            <tr>
 	                <td>真实姓名</td>
-	                <td><input class="easyui-validatebox" id="real_name" name="real_name" data-options="required:true"/></td>
+	                <td><input class="easyui-validatebox" id="realName" name="realName" data-options="required:true"/></td>
 	            </tr>
 	            <tr>
 	                <td>邮箱</td>
